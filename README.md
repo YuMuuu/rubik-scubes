@@ -1,8 +1,9 @@
-## sbt project compiled with Scala 3
+# ルービックキューブをモデリングする
 
-### Usage
 
-This is a normal sbt project. You can compile code with `sbt compile`, run it with `sbt run`, and `sbt console` will start a Scala 3 REPL.
+# use
+- dev container
+- scala3
 
-For more information on the sbt-dotty plugin, see the
-[scala3-example-project](https://github.com/scala/scala3-example-project/blob/main/README.md).
+# 参考
+-  [群論の味わい －置換群で解き明かすルービックキューブと15パズル－](https://www.amazon.co.jp/dp/4320019415/ref=cm_sw_em_r_mt_dp_FFXT8TAABNN6DPNJJFF4)
