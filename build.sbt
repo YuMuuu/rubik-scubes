@@ -1,4 +1,5 @@
 val scala3Version = "3.1.0"
+// val scala3Version = "3.0.2"
 
 lazy val root = project
   .in(file("."))
@@ -8,9 +9,9 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    // libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
     libraryDependencies ++= Seq(
     "org.typelevel" %% "cats-core" % "2.6.1",
     "org.typelevel" %% "cats-effect" % "3.1.1",
+    "com.novocode" % "junit-interface" % "0.11" % "test"
     )
   )

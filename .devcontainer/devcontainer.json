@@ -20,6 +20,7 @@
 	},
 	"extensions": [
 		"vscjava.vscode-java-pack",
+		"scala-lang.scala",
 		"scalameta.metals"
 	]
 }
