@@ -38,15 +38,16 @@ case class Rubik(
   def execute(ts: TurnSymbols): Rubik = RubikExecutor.rubicExecutor(this, ts)
 
 object Rubik:
-//                                         |37, B|38, B|39, B|
-//                                         |40, B|41, B|42, B|
-//                                         |43, B|44, B|45, B|
+// factoryで作成するルビっくキューブのmap
+//                                         |37, G|38, G|39, G|
+//                                         |40, G|41, G|42, G|
+//                                         |43, G|44, G|45, G|
 // |1 , Y|2 , Y|3 , Y| |10, R|11, R|12, R| |19, W|20, W|21, W| |28, O|29, O|30, O|
 // |4 , Y|5 , Y|6 , Y| |13, R|14, R|15, R| |22, W|23, W|24, W| |31, O|32, O|33, O|
 // |7 , Y|8 , Y|9 , Y| |16, R|17, R|18, R| |25, W|26, W|27, W| |34, O|35, O|36, O|
-//                                         |46, G|47, G|48, G|
-//                                         |49, G|50, G|51, G|
-//                                         |52, G|53, G|54, G|
+//                                         |46, B|47, B|48, B|
+//                                         |49, B|50, B|51, B|
+//                                         |52, B|53, B|54, B|
   def factory(): Rubik =
     Rubik(
       f1 = Face(
@@ -94,28 +95,115 @@ object Rubik:
         p9 = Panel(36, Color.Orange)
       ),
       f5 = Face(
-        p1 = Panel(37, Color.Blue),
-        p2 = Panel(38, Color.Blue),
-        p3 = Panel(39, Color.Blue),
-        p4 = Panel(40, Color.Blue),
-        p5 = Panel(41, Color.Blue),
-        p6 = Panel(42, Color.Blue),
-        p7 = Panel(43, Color.Blue),
-        p8 = Panel(44, Color.Blue),
-        p9 = Panel(45, Color.Blue)
+        p1 = Panel(37, Color.Green),
+        p2 = Panel(38, Color.Green),
+        p3 = Panel(39, Color.Green),
+        p4 = Panel(40, Color.Green),
+        p5 = Panel(41, Color.Green),
+        p6 = Panel(42, Color.Green),
+        p7 = Panel(43, Color.Green),
+        p8 = Panel(44, Color.Green),
+        p9 = Panel(45, Color.Green)
       ),
       f6 = Face(
-        p1 = Panel(46, Color.Green),
-        p2 = Panel(47, Color.Green),
-        p3 = Panel(48, Color.Green),
-        p4 = Panel(49, Color.Green),
-        p5 = Panel(50, Color.Green),
-        p6 = Panel(51, Color.Green),
-        p7 = Panel(52, Color.Green),
-        p8 = Panel(53, Color.Green),
-        p9 = Panel(54, Color.Green)
+        p1 = Panel(46, Color.Blue),
+        p2 = Panel(47, Color.Blue),
+        p3 = Panel(48, Color.Blue),
+        p4 = Panel(49, Color.Blue),
+        p5 = Panel(50, Color.Blue),
+        p6 = Panel(51, Color.Blue),
+        p7 = Panel(52, Color.Blue),
+        p8 = Panel(53, Color.Blue),
+        p9 = Panel(54, Color.Blue)
       )
     )
 
+//face4を正面とするrubiccubeの操作を行う
+//todo: executeってなんか副作用がありそうだし、良い命名を考える
 object RubikExecutor:
-  def rubicExecutor(rubik: Rubik, ts: TurnSymbols): Rubik = ???
+  import rubikcube.RubicLens.*
+  import monocle.syntax.all.*
+
+  def rubicExecutor(rubik: Rubik, ts: TurnSymbols): Rubik = ts match 
+      case TurnSymbols.R => turnR(rubik)
+      case _ => ??? //ここに他の回転も実装する 
+
+
+  def turnR(rubik: Rubik): Rubik =
+    rubik
+      .focus(_.f3.p9)
+      .replace((_face6 ^|-> _panel9) get rubik)
+      .focus(_.f3.p6)
+      .replace((_face6 ^|-> _panel6) get rubik)
+      .focus(_.f3.p3)
+      .replace((_face6 ^|-> _panel3) get rubik)
+      .focus(_.f5.p9)
+      .replace((_face3 ^|-> _panel9) get rubik)
+      .focus(_.f5.p6)
+      .replace((_face3 ^|-> _panel6) get rubik)
+      .focus(_.f5.p3)
+      .replace((_face3 ^|-> _panel3) get rubik)
+      .focus(_.f1.p1)
+      .replace((_face5 ^|-> _panel9) get rubik)
+      .focus(_.f1.p4)
+      .replace((_face5 ^|-> _panel6) get rubik)
+      .focus(_.f1.p7)
+      .replace((_face5 ^|-> _panel3) get rubik)
+      .focus(_.f6.p9)
+      .replace((_face1 ^|-> _panel1) get rubik)
+      .focus(_.f6.p6)
+      .replace((_face1 ^|-> _panel4) get rubik)
+      .focus(_.f6.p3)
+      .replace((_face1 ^|-> _panel7) get rubik)
+      .focus(_.f4.p7)
+      .replace((_face4 ^|-> _panel9) get rubik)
+      .focus(_.f4.p4)
+      .replace((_face4 ^|-> _panel8) get rubik)
+      .focus(_.f4.p1)
+      .replace((_face4 ^|-> _panel7) get rubik)
+      .focus(_.f4.p2)
+      .replace((_face4 ^|-> _panel4) get rubik)
+      .focus(_.f4.p3)
+      .replace((_face4 ^|-> _panel1) get rubik)
+      .focus(_.f4.p6)
+      .replace((_face4 ^|-> _panel2) get rubik)
+      .focus(_.f4.p9)
+      .replace((_face4 ^|-> _panel3) get rubik)
+      .focus(_.f4.p8)
+      .replace((_face4 ^|-> _panel6) get rubik)
+
+//ルービックキューブのLensの定義
+object RubicLens:
+  import monocle.Lens
+
+  val _face1 =
+    Lens[Rubik, Face](_.f1)(face => r => r.copy(f1 = face))
+  val _face2 =
+    Lens[Rubik, Face](_.f2)(face => r => r.copy(f2 = face))
+  val _face3 =
+    Lens[Rubik, Face](_.f3)(face => r => r.copy(f3 = face))
+  val _face4 =
+    Lens[Rubik, Face](_.f4)(face => r => r.copy(f4 = face))
+  val _face5 =
+    Lens[Rubik, Face](_.f5)(face => r => r.copy(f5 = face))
+  val _face6 =
+    Lens[Rubik, Face](_.f6)(face => r => r.copy(f6 = face))
+
+  val _panel1 =
+    Lens[Face, Panel](_.p1)(panel => f => f.copy(p1 = panel))
+  val _panel2 =
+    Lens[Face, Panel](_.p2)(panel => f => f.copy(p2 = panel))
+  val _panel3 =
+    Lens[Face, Panel](_.p3)(panel => f => f.copy(p3 = panel))
+  val _panel4 =
+    Lens[Face, Panel](_.p4)(panel => f => f.copy(p4 = panel))
+  val _panel5 =
+    Lens[Face, Panel](_.p5)(panel => f => f.copy(p5 = panel))
+  val _panel6 =
+    Lens[Face, Panel](_.p6)(panel => f => f.copy(p6 = panel))
+  val _panel7 =
+    Lens[Face, Panel](_.p7)(panel => f => f.copy(p7 = panel))
+  val _panel8 =
+    Lens[Face, Panel](_.p8)(panel => f => f.copy(p8 = panel))
+  val _panel9 =
+    Lens[Face, Panel](_.p9)(panel => f => f.copy(p9 = panel))
