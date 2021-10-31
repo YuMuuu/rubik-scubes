@@ -1,16 +1,16 @@
 package rubikcube
 
 import rubikcube.RubicLens.*
-import rubikcube.TurnSymbols._
+import rubikcube.TurnSymbols.*
 import monocle.syntax.all.*
 
 //face4を正面とするrubiccubeの操作を行う
 //todo: executeってなんか副作用がありそうだし、良い命名を考える
 object RubikExecutor:
-  def rubicExecutor(rubik: Rubik, ts: TurnSymbols): Rubik = ts match 
-      case TurnSymbols.R => turnR(rubik)
-      case _ => ??? //ここに他の回転も実装する 
-
+  def rubikExecutor(rubik: Rubik, ts: TurnSymbols): Rubik = ts match
+    case TurnSymbols.R  => turnR(rubik)
+    case TurnSymbols.R2 => turnR(turnR(rubik))
+    case _              => ??? //ここに他の回転も実装する
 
   def turnR(rubik: Rubik): Rubik =
     rubik
