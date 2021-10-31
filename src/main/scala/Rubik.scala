@@ -4,7 +4,7 @@ import rubikcube.Color.Color
 import rubikcube.TurnSymbols.TurnSymbols
 
 // ルービックキューブの1つ1つのパネルを表す
-case class Panel(num: Int, color: Color)
+case class Panel(pos: Int, color: Color)
 
 // ルービックキューブの面を表す
 // | p1 | p2 | p3 |
@@ -26,7 +26,6 @@ case class Face(
 //           | f5 |
 // | f1 | f2 | f3 | f4 |
 //           | f6 |
-
 case class Rubik(
     f1: Face,
     f2: Face,
@@ -36,6 +35,38 @@ case class Rubik(
     f6: Face
 ):
   def execute(ts: TurnSymbols): Rubik = RubikExecutor.rubicExecutor(this, ts)
+  def graphicView(): Unit = {
+    val red = "\u001b[00;31m"
+    val green = "\u001b[00;32m"
+    val yellow = "\u001b[00;33m"
+    val blue = "\u001b[00;34m"
+    val orenge = "\u001b[38;5;208m"
+    val white = "\u001b[00;37m"
+    val end = "\u001b[00m" 
+
+    def toUnixColor(color: Color): String = {
+      color match
+        case Color.Blue => blue
+        case Color.Green => green
+        case Color.Orange => orenge
+        case Color.Red => red
+        case Color.White => white
+        case Color.Yellow => yellow
+    }
+    val str = {
+      s"""|               ${toUnixColor(this.f5.p1.color)}■ ${toUnixColor(this.f5.p2.color)}■ ${toUnixColor(this.f5.p3.color)}■
+          |               ${toUnixColor(this.f5.p4.color)}■ ${toUnixColor(this.f5.p5.color)}■ ${toUnixColor(this.f5.p6.color)}■
+          |               ${toUnixColor(this.f5.p7.color)}■ ${toUnixColor(this.f5.p8.color)}■ ${toUnixColor(this.f5.p9.color)}■
+          | ${toUnixColor(this.f1.p1.color)}■ ${toUnixColor(this.f1.p2.color)}■ ${toUnixColor(this.f1.p3.color)}■  ${toUnixColor(this.f2.p1.color)}■ ${toUnixColor(this.f2.p2.color)}■ ${toUnixColor(this.f2.p3.color)}■  ${toUnixColor(this.f3.p1.color)}■ ${toUnixColor(this.f3.p2.color)}■ ${toUnixColor(this.f3.p3.color)}■  ${toUnixColor(this.f4.p1.color)}■ ${toUnixColor(this.f4.p2.color)}■ ${toUnixColor(this.f4.p3.color)}■ 
+          | ${toUnixColor(this.f1.p4.color)}■ ${toUnixColor(this.f1.p5.color)}■ ${toUnixColor(this.f1.p6.color)}■  ${toUnixColor(this.f2.p4.color)}■ ${toUnixColor(this.f2.p5.color)}■ ${toUnixColor(this.f2.p6.color)}■  ${toUnixColor(this.f3.p4.color)}■ ${toUnixColor(this.f3.p5.color)}■ ${toUnixColor(this.f3.p6.color)}■  ${toUnixColor(this.f4.p4.color)}■ ${toUnixColor(this.f4.p5.color)}■ ${toUnixColor(this.f4.p6.color)}■ 
+          | ${toUnixColor(this.f1.p7.color)}■ ${toUnixColor(this.f1.p8.color)}■ ${toUnixColor(this.f1.p9.color)}■  ${toUnixColor(this.f2.p7.color)}■ ${toUnixColor(this.f2.p8.color)}■ ${toUnixColor(this.f2.p9.color)}■  ${toUnixColor(this.f3.p7.color)}■ ${toUnixColor(this.f3.p8.color)}■ ${toUnixColor(this.f3.p9.color)}■  ${toUnixColor(this.f4.p7.color)}■ ${toUnixColor(this.f4.p8.color)}■ ${toUnixColor(this.f4.p9.color)}■ 
+          |               ${toUnixColor(this.f6.p1.color)}■ ${toUnixColor(this.f6.p2.color)}■ ${toUnixColor(this.f6.p3.color)}■
+          |               ${toUnixColor(this.f6.p4.color)}■ ${toUnixColor(this.f6.p5.color)}■ ${toUnixColor(this.f6.p6.color)}■
+          |               ${toUnixColor(this.f6.p7.color)}■ ${toUnixColor(this.f6.p8.color)}■ ${toUnixColor(this.f6.p9.color)}■
+          |""".stripMargin
+    }
+    println(str + end)
+  }
 
 object Rubik:
 // factoryで作成するルビっくキューブのmap
